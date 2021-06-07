@@ -28,36 +28,29 @@ const NAMES = [
 const posts = [];
 
 
-function getRandomNumber(from, to) {
+const getRandomNumber = (from, to) => {
   if (from >= 0 && to > from) {
     return Math.floor(Math.random() * (to - from + 1) + from);
   }
   return -1;
-}
+};
 
-function checkStringLength(string, maxLength) {
-  return string.length <= maxLength;
-}
+const checkStringLength = (string, maxLength) => string.length <= maxLength;
 
 checkStringLength('test', 2);
 
-function getRandomArrayElement(element) {
-  return element[getRandomNumber(0, element.length - 1)];
-}
+const getRandomArrayElement = (elements) => elements[getRandomNumber(0, elements.length - 1)];
 
-function createMessage() {
+
+const createMessage = () => {
   const numberOfSentences = getRandomNumber(1,2);
-  let message = '';
+  return Array(numberOfSentences)
+    .fill()
+    .map(() => getRandomArrayElement(COMMENTS))
+    .join(' ');
+};
 
-  for(let item = numberOfSentences; item > 0; item--) {
-    message += getRandomArrayElement(COMMENTS);
-  }
-
-  return message;
-
-}
-
-function createCommentItem(item, index) {
+const createCommentItem = (item, index) => {
   item = {
     id: index,
     avatar: `img/avatar-${getRandomNumber(1, 6)}.svg`,
@@ -65,19 +58,19 @@ function createCommentItem(item, index) {
     name: getRandomArrayElement(NAMES),
   };
   return item;
-}
+};
 
-function createItemDescription(id) {
+const createPost = (id) => {
+  const numberOfComments = getRandomNumber(0, 10);
   return {
     id: id,
     url: `photos/${id}.jpg`,
     description: getRandomArrayElement(DESCRIOPTIONS_OF_PHOTOS),
     likes: getRandomNumber(15, 200),
-    comments: new Array(getRandomNumber(0, 10)).fill(null).map((item, index) => createCommentItem(item, index)),
+    comments: Array(numberOfComments).fill().map((item, idx) => createCommentItem(item, idx)),
   };
-}
+};
 
 for (let item = 1; item <= 25; item++) {
-  posts.push(createItemDescription(item));
+  posts.push(createPost(item));
 }
-
