@@ -67,10 +67,12 @@ const createPost = (id) => {
     url: `photos/${id}.jpg`,
     description: getRandomArrayElement(DESCRIOPTIONS_OF_PHOTOS),
     likes: getRandomNumber(15, 200),
-    comments: Array(numberOfComments).fill().map((item, idx) => createCommentItem(item, idx)),
+    comments: Array(numberOfComments).fill().map((item, index) => createCommentItem(item, index)),
   };
 };
 
 for (let item = 1; item <= 25; item++) {
   posts.push(createPost(item));
 }
+
+
