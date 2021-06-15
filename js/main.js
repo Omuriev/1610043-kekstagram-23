@@ -1,1 +1,2 @@
-import './posts.js';
+import './render-pictures.js';
+
