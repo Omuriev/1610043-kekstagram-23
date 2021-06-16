@@ -66,3 +66,5 @@ const createPost = (id) => {
 for (let item = 1; item <= 25; item++) {
   posts.push(createPost(item));
 }
+
+export {posts};
