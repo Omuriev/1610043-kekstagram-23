@@ -1,4 +1,5 @@
 import {posts} from './posts.js';
+import {showBigPictureModal} from './render-big-picture.js';
 
 const picturesContainer = document.querySelector('.pictures');
 const pictureTemplate = document.querySelector('#picture')
@@ -18,3 +19,20 @@ similarPosts.forEach(({url, likes, comments}) => {
 });
 
 picturesContainer.appendChild(similarListFragment);
+
+picturesContainer.addEventListener('click', (evt) => {
+  const element = evt.target;
+  if(element.className === 'picture__img') {
+    evt.preventDefault();
+    const post = similarPosts.find(({url}) => url === element.getAttribute('src'));
+    showBigPictureModal(post);
+    // .map(showBigPictureModal);
+    // similarPosts.forEach((item) => {
+    //   if(item.url === evt.target.getAttribute('src')) {
+    //     const {url, likes, comments} = item;
+    //     showBigPictureModal(url, likes, comments);
+    //   }
+    // });
+
+  }
+});
