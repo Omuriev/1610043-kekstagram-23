@@ -1,4 +1,5 @@
 import {posts} from './posts.js';
+import {showBigPictureModal} from './render-big-picture.js';
 
 const picturesContainer = document.querySelector('.pictures');
 const pictureTemplate = document.querySelector('#picture')
@@ -18,3 +19,12 @@ similarPosts.forEach(({url, likes, comments}) => {
 });
 
 picturesContainer.appendChild(similarListFragment);
+
+picturesContainer.addEventListener('click', (evt) => {
+  const target = evt.target;
+  if (target.className === 'picture__img') {
+    evt.preventDefault();
+    const post = similarPosts.find(({url}) => url === target.getAttribute('src'));
+    showBigPictureModal(post);
+  }
+});
