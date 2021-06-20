@@ -21,8 +21,8 @@ similarPosts.forEach(({url, likes, comments}) => {
 picturesContainer.appendChild(similarListFragment);
 
 picturesContainer.addEventListener('click', (evt) => {
-  const target= evt.target;
-  if(target.className === 'picture__img') {
+  const target = evt.target;
+  if (target.className === 'picture__img') {
     evt.preventDefault();
     const post = similarPosts.find(({url}) => url === target.getAttribute('src'));
     showBigPictureModal(post);

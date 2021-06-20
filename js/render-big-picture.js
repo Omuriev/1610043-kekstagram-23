@@ -32,7 +32,7 @@ const closeBigPictureModal = () => {
   document.removeEventListener('keydown', closeBigPictureModal);
 };
 
-const checkKeyCode = (evt) => {
+const onEscButton = (evt) => {
   if (evt.keyCode === 27) {
     closeBigPictureModal();
   }
@@ -48,11 +48,9 @@ const showBigPictureModal = ({url, likes, comments, description}) => {
   commentsLoader.classList.add('hidden');
   document.body.classList.add('modal-open');
   commentsContainer.innerHTML = '';
-  generateComments(comments).forEach((element) => {
-    commentsContainer.append(element);
-  });
+  commentsContainer.append(...generateComments(comments));
   bigPictureCancelButton.addEventListener('click', closeBigPictureModal);
-  document.addEventListener('keydown', checkKeyCode);
+  document.addEventListener('keydown', onEscButton);
 };
 
 export {showBigPictureModal};
