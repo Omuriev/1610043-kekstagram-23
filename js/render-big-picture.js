@@ -31,7 +31,7 @@ const closeBigPictureModal = () => {
   bigPictureModal.classList.add('hidden');
   document.body.classList.remove('modal-open');
   bigPictureCancelButton.removeEventListener('click', closeBigPictureModal);
-  document.removeEventListener('keydown', closeBigPictureModal);
+  document.removeEventListener('keydown', onEscButton);
 };
 
 const showBigPictureModal = ({url, likes, comments, description}) => {
@@ -46,11 +46,7 @@ const showBigPictureModal = ({url, likes, comments, description}) => {
   commentsContainer.innerHTML = '';
   commentsContainer.append(...generateComments(comments));
   bigPictureCancelButton.addEventListener('click', closeBigPictureModal);
-  document.addEventListener('keydown', (evt) => {
-    if(onEscButton(evt)) {
-      closeBigPictureModal();
-    }
-  });
+  document.addEventListener('keydown', onEscButton(closeBigPictureModal));
 };
 
 export {showBigPictureModal};

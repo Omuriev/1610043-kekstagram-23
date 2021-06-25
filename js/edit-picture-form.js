@@ -8,6 +8,14 @@ const editPictureCancelButton = editPictureForm.querySelector('#upload-cancel');
 const hashtagsInput = editPictureForm.querySelector('.text__hashtags');
 const commentInput = editPictureForm.querySelector('.text__description');
 
+const errors = {
+  hashtagSum: 'Нельзя указать больше 5 хэш-тегов',
+  hashtagRepeat: 'Хэштеги не должны повторяться',
+  hashtagTemplate: 'Хэштеги не соответствуют требованиям. Хэштег должен начинаться с знака #, не может содержать пробелы, спецсимволы, символы пунктуации, эмодзи',
+  commentLength: 'Длинна комментария не должна быть больше 140 символов',
+};
+Object.freeze(errors);
+
 const checkUniqueHashtags = (hashtags) => {
   const uniqueValue = [];
   for (let index = 0; index < hashtags.length; ++index) {
@@ -25,11 +33,11 @@ const isFit = (hashtags, template) => hashtags.every((element) => template.test(
 const renderValidationMessages = (hashtags) => {
   const re = /^#[A-Za-zА-Яа-я0-9]{1,19}$/;
   if (!isFit(hashtags, re)) {
-    hashtagsInput.setCustomValidity('Хэштеги не соответствуют требованиям. Хэштег должен начинаться с знака #, не может содержать пробелы, спецсимволы, символы пунктуации, эмодзи');
+    hashtagsInput.setCustomValidity(errors.hashtagTemplate);
   } else if (!checkUniqueHashtags(hashtags)) {
-    hashtagsInput.setCustomValidity('Хэштеги не должны повторяться');
+    hashtagsInput.setCustomValidity(errors.hashtagRepeat);
   } else if (hashtags.length > 5) {
-    hashtagsInput.setCustomValidity('Нельзя указать больше 5 хэш-тегов');
+    hashtagsInput.setCustomValidity(errors.hashtagSum);
   } else {
     hashtagsInput.setCustomValidity('');
   }
@@ -46,9 +54,9 @@ const onInputFocused = (evt) => {
 };
 
 const checkComment = (evt) => {
-  const comment = evt.target.value;
-  if(!checkStringLength(comment, MAX_COMMENT_LENGTH)) {
-    commentInput.setCustomValidity('Длинна комментария не должна быть больше 140 символов');
+  const {value} = evt.target;
+  if(!checkStringLength(value, MAX_COMMENT_LENGTH)) {
+    commentInput.setCustomValidity(errors.commentLength);
   } else {
     commentInput.setCustomValidity('');
   }
@@ -64,7 +72,7 @@ const closeEditPictureForm = () => {
   hashtagsInput.removeEventListener('keydown', onInputFocused);
   commentInput.removeEventListener('input',checkComment);
   commentInput.removeEventListener('keydown', onInputFocused);
-  document.removeEventListener('keydown', closeEditPictureForm);
+  document.removeEventListener('keydown', onEscButton);
 };
 
 const showEditPictureForm = () => {
@@ -75,11 +83,7 @@ const showEditPictureForm = () => {
   hashtagsInput.addEventListener('keydown', onInputFocused);
   commentInput.addEventListener('input', checkComment);
   commentInput.addEventListener('keydown', onInputFocused);
-  document.addEventListener('keydown', (evt) => {
-    if(onEscButton(evt)) {
-      closeEditPictureForm();
-    }
-  });
+  document.addEventListener('keydown', onEscButton(closeEditPictureForm));
 };
 
 uploadPictureInput.addEventListener('change', () => {
