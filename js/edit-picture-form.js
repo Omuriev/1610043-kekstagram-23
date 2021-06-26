@@ -8,13 +8,13 @@ const editPictureCancelButton = editPictureForm.querySelector('#upload-cancel');
 const hashtagsInput = editPictureForm.querySelector('.text__hashtags');
 const commentInput = editPictureForm.querySelector('.text__description');
 
-const errors = {
-  hashtagSum: 'Нельзя указать больше 5 хэш-тегов',
-  hashtagRepeat: 'Хэштеги не должны повторяться',
-  hashtagTemplate: 'Хэштеги не соответствуют требованиям. Хэштег должен начинаться с знака #, не может содержать пробелы, спецсимволы, символы пунктуации, эмодзи',
-  commentLength: 'Длинна комментария не должна быть больше 140 символов',
+const ErrorMessages = {
+  HASHTAG_SUM: 'Нельзя указать больше 5 хэш-тегов',
+  HASHTAG_REPEAT: 'Хэштеги не должны повторяться',
+  HASHTAG_TEMPLATE: 'Хэштеги не соответствуют требованиям. Хэштег должен начинаться с знака #, не может содержать пробелы, спецсимволы, символы пунктуации, эмодзи',
+  COMMENT_LENGTH: 'Длинна комментария не должна быть больше 140 символов',
 };
-Object.freeze(errors);
+Object.freeze(ErrorMessages);
 
 const checkUniqueHashtags = (hashtags) => {
   const uniqueValue = [];
@@ -33,11 +33,11 @@ const isFit = (hashtags, template) => hashtags.every((element) => template.test(
 const renderValidationMessages = (hashtags) => {
   const re = /^#[A-Za-zА-Яа-я0-9]{1,19}$/;
   if (!isFit(hashtags, re)) {
-    hashtagsInput.setCustomValidity(errors.hashtagTemplate);
+    hashtagsInput.setCustomValidity(ErrorMessages.HASHTAG_TEMPLATE);
   } else if (!checkUniqueHashtags(hashtags)) {
-    hashtagsInput.setCustomValidity(errors.hashtagRepeat);
+    hashtagsInput.setCustomValidity(ErrorMessages.HASHTAG_REPEAT);
   } else if (hashtags.length > 5) {
-    hashtagsInput.setCustomValidity(errors.hashtagSum);
+    hashtagsInput.setCustomValidity(ErrorMessages.HASHTAG_SUM);
   } else {
     hashtagsInput.setCustomValidity('');
   }
@@ -56,7 +56,7 @@ const onInputFocused = (evt) => {
 const checkComment = (evt) => {
   const {value} = evt.target;
   if(!checkStringLength(value, MAX_COMMENT_LENGTH)) {
-    commentInput.setCustomValidity(errors.commentLength);
+    commentInput.setCustomValidity(ErrorMessages.COMMENT_LENGTH);
   } else {
     commentInput.setCustomValidity('');
   }
