@@ -72,12 +72,13 @@ const closeEditPictureForm = () => {
   hashtagsInput.removeEventListener('keydown', onInputFocused);
   commentInput.removeEventListener('input',checkComment);
   commentInput.removeEventListener('keydown', onInputFocused);
-  document.removeEventListener('keydown', onEscButton);
+
 };
 
 const onEscButton = (evt) => {
   if (evt.keyCode === 27) {
     closeEditPictureForm();
+    document.removeEventListener('keydown', onEscButton);
   }
 };
 

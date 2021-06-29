@@ -39,13 +39,13 @@ const closeBigPictureModal = () => {
   bigPictureModal.classList.add('hidden');
   document.body.classList.remove('modal-open');
   bigPictureCancelButton.removeEventListener('click', closeBigPictureModal);
-  document.removeEventListener('keydown', onEscButton);
   commentsLoader.removeEventListener('click', showComments);
 };
 
 const onEscButton = (evt) => {
   if (evt.keyCode === 27) {
     closeBigPictureModal();
+    document.removeEventListener('keydown', onEscButton);
   }
 };
 
