@@ -83,7 +83,7 @@ const showEditPictureForm = () => {
   hashtagsInput.addEventListener('keydown', onInputFocused);
   commentInput.addEventListener('input', checkComment);
   commentInput.addEventListener('keydown', onInputFocused);
-  document.addEventListener('keydown', onEscButton(closeEditPictureForm));
+  document.addEventListener('keydown', onEscButton.bind(null, closeEditPictureForm));
 };
 
 uploadPictureInput.addEventListener('change', () => {
