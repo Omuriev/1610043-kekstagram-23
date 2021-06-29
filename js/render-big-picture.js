@@ -1,5 +1,3 @@
-import { onEscButton } from './util.js';
-
 const bigPictureModal = document.querySelector('.big-picture');
 const bigPictureImage = bigPictureModal.querySelector('.big-picture__img img');
 const bigPictureLikes = bigPictureModal.querySelector('.likes-count');
@@ -41,8 +39,14 @@ const closeBigPictureModal = () => {
   bigPictureModal.classList.add('hidden');
   document.body.classList.remove('modal-open');
   bigPictureCancelButton.removeEventListener('click', closeBigPictureModal);
-  document.removeEventListener('keydown', closeBigPictureModal);
+  document.removeEventListener('keydown', onEscButton);
   commentsLoader.removeEventListener('click', showComments);
+};
+
+const onEscButton = (evt) => {
+  if (evt.keyCode === 27) {
+    closeBigPictureModal();
+  }
 };
 
 const showBigPictureModal = ({url, likes, comments, description}) => {
@@ -58,7 +62,7 @@ const showBigPictureModal = ({url, likes, comments, description}) => {
   showComments();
   commentsLoader.addEventListener('click', showComments);
   bigPictureCancelButton.addEventListener('click', closeBigPictureModal);
-  document.addEventListener('keydown', onEscButton.bind(null, closeBigPictureModal));
+  document.addEventListener('keydown', onEscButton);
 };
 
 export {showBigPictureModal};

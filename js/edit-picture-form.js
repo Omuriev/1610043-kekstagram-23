@@ -1,4 +1,4 @@
-import { onEscButton, checkStringLength } from './util.js';
+import { checkStringLength } from './util.js';
 
 const MAX_COMMENT_LENGTH = 140;
 
@@ -75,6 +75,12 @@ const closeEditPictureForm = () => {
   document.removeEventListener('keydown', onEscButton);
 };
 
+const onEscButton = (evt) => {
+  if (evt.keyCode === 27) {
+    closeEditPictureForm();
+  }
+};
+
 const showEditPictureForm = () => {
   editPictureForm.classList.remove('hidden');
   document.body.classList.add('modal-open');
@@ -83,7 +89,7 @@ const showEditPictureForm = () => {
   hashtagsInput.addEventListener('keydown', onInputFocused);
   commentInput.addEventListener('input', checkComment);
   commentInput.addEventListener('keydown', onInputFocused);
-  document.addEventListener('keydown', onEscButton.bind(null, closeEditPictureForm));
+  document.addEventListener('keydown', onEscButton);
 };
 
 uploadPictureInput.addEventListener('change', () => {
