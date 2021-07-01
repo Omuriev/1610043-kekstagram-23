@@ -8,7 +8,7 @@ const commentsLoader = bigPictureModal.querySelector('.comments-loader');
 const bigPictureCancelButton = bigPictureModal.querySelector('.big-picture__cancel');
 
 let generatedComments;
-let commentsCount = 0;
+let commentsCount = 5;
 
 const generateComments = (comments) => comments.reduce((acc, item) => {
   const listItem = document.createElement('li');
@@ -28,10 +28,13 @@ const generateComments = (comments) => comments.reduce((acc, item) => {
 }, []);
 
 const showComments = () => {
-  commentsContainer.append(...generatedComments.splice(0, 5));
-  commentsCounter.textContent = `${commentsContainer.children.length} из ${commentsCount} комментариев`;
-  if (!generatedComments.length) {
+  commentsContainer.append(...generatedComments.slice(0, commentsCount));
+  commentsCounter.textContent = `${commentsContainer.children.length} из ${generatedComments.length} комментариев`;
+  if (generatedComments.length <= commentsCount) {
     commentsLoader.classList.add('hidden');
+    commentsCount = 5;
+  } else {
+    commentsCount += 5;
   }
 };
 
@@ -55,7 +58,6 @@ const showBigPictureModal = ({url, likes, comments, description}) => {
   bigPictureLikes.textContent = likes;
   bigPictureDescription.textContent = description;
   generatedComments = generateComments(comments);
-  commentsCount = generatedComments.length;
   commentsLoader.classList.remove('hidden');
   document.body.classList.add('modal-open');
   commentsContainer.innerHTML = '';
