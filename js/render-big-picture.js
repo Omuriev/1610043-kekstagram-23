@@ -1,14 +1,14 @@
-import { onEscButton } from './util.js';
-
 const bigPictureModal = document.querySelector('.big-picture');
 const bigPictureImage = bigPictureModal.querySelector('.big-picture__img img');
 const bigPictureLikes = bigPictureModal.querySelector('.likes-count');
 const bigPictureDescription = bigPictureModal.querySelector('.social__caption');
-const bigPictureComments = bigPictureModal.querySelector('.comments-count');
 const commentsContainer = bigPictureModal.querySelector('.social__comments');
 const commentsCounter = bigPictureModal.querySelector('.social__comment-count');
 const commentsLoader = bigPictureModal.querySelector('.comments-loader');
 const bigPictureCancelButton = bigPictureModal.querySelector('.big-picture__cancel');
+
+let generatedComments;
+let commentsCount = 5;
 
 const generateComments = (comments) => comments.reduce((acc, item) => {
   const listItem = document.createElement('li');
@@ -27,11 +27,29 @@ const generateComments = (comments) => comments.reduce((acc, item) => {
   return [...acc, listItem];
 }, []);
 
+const showComments = () => {
+  commentsContainer.append(...generatedComments.slice(0, commentsCount));
+  commentsCounter.textContent = `${commentsContainer.children.length} из ${generatedComments.length} комментариев`;
+  if (generatedComments.length <= commentsCount) {
+    commentsLoader.classList.add('hidden');
+    commentsCount = 5;
+  } else {
+    commentsCount += 5;
+  }
+};
+
 const closeBigPictureModal = () => {
   bigPictureModal.classList.add('hidden');
   document.body.classList.remove('modal-open');
   bigPictureCancelButton.removeEventListener('click', closeBigPictureModal);
-  document.removeEventListener('keydown', onEscButton);
+  commentsLoader.removeEventListener('click', showComments);
+};
+
+const onEscButton = (evt) => {
+  if (evt.keyCode === 27) {
+    closeBigPictureModal();
+    document.removeEventListener('keydown', onEscButton);
+  }
 };
 
 const showBigPictureModal = ({url, likes, comments, description}) => {
@@ -39,14 +57,14 @@ const showBigPictureModal = ({url, likes, comments, description}) => {
   bigPictureImage.setAttribute('src', url);
   bigPictureLikes.textContent = likes;
   bigPictureDescription.textContent = description;
-  bigPictureComments.textContent = comments.length;
-  commentsCounter.classList.add('hidden');
-  commentsLoader.classList.add('hidden');
+  generatedComments = generateComments(comments);
+  commentsLoader.classList.remove('hidden');
   document.body.classList.add('modal-open');
   commentsContainer.innerHTML = '';
-  commentsContainer.append(...generateComments(comments));
+  showComments();
+  commentsLoader.addEventListener('click', showComments);
   bigPictureCancelButton.addEventListener('click', closeBigPictureModal);
-  document.addEventListener('keydown', onEscButton(closeBigPictureModal));
+  document.addEventListener('keydown', onEscButton);
 };
 
 export {showBigPictureModal};

@@ -7,11 +7,6 @@ const getRandomNumber = (from, to) => {
 
 const checkStringLength = (string, maxLength) => string.length <= maxLength;
 
-const onEscButton = (func) => (evt) => {
-  if (evt.keyCode === 27) {
-    func();
-  }
-};
 
-export {getRandomNumber, checkStringLength, onEscButton};
+export {getRandomNumber, checkStringLength};
 
