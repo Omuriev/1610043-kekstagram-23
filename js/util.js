@@ -8,5 +8,5 @@ const getRandomNumber = (from, to) => {
 const checkStringLength = (string, maxLength) => string.length <= maxLength;
 
 
-export {getRandomNumber, checkStringLength};
+export { getRandomNumber, checkStringLength };
 

@@ -28,7 +28,7 @@ const generateComments = (comments) => comments.reduce((acc, item) => {
 }, []);
 
 const showComments = () => {
-  commentsContainer.append(...generatedComments.slice(0, commentsCount));
+  commentsContainer.append(...generatedComments.slice(commentsCount - 5, commentsCount));
   commentsCounter.textContent = `${commentsContainer.children.length} из ${generatedComments.length} комментариев`;
   if (generatedComments.length <= commentsCount) {
     commentsLoader.classList.add('hidden');
@@ -67,4 +67,4 @@ const showBigPictureModal = ({url, likes, comments, description}) => {
   document.addEventListener('keydown', onEscButton);
 };
 
-export {showBigPictureModal};
+export { showBigPictureModal };

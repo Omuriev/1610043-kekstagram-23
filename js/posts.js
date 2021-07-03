@@ -1,4 +1,4 @@
-import {getRandomNumber} from './util.js';
+import { getRandomNumber } from './util.js';
 
 const DESCRIOPTIONS_OF_PHOTOS = [
   'На море',
@@ -67,4 +67,4 @@ for (let item = 1; item <= 25; item++) {
   posts.push(createPost(item));
 }
 
-export {posts};
+export { posts };
