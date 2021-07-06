@@ -1,5 +1,5 @@
 import { checkStringLength } from './util.js';
-import { changeSliderOptions, createSlider, slider } from './noUISlider.js';
+import { createSlider, addEffectOfPicture, removeEffectOfPicture, slider } from './noUISlider.js';
 
 const MAX_COMMENT_LENGTH = 140;
 const SCALE_MIN_VALUE = 25;
@@ -24,25 +24,6 @@ const ErrorMessages = {
   COMMENT_LENGTH: 'Длинна комментария не должна быть больше 140 символов',
 };
 Object.freeze(ErrorMessages);
-
-const removeEffectOfPicture = () => {
-  picturePreview.removeAttribute('class');
-  picturePreview.style.removeProperty('filter');
-  slider.classList.add('hidden');
-};
-
-const addEffectOfPicture = ({ target: { value, id } }) => {
-
-  if(value !== 'none' && id) {
-    picturePreview.className = '';
-    picturePreview.classList.add(`effects__preview--${value}`);
-    changeSliderOptions(id);
-    // changePictureFilter(`effect-phobos`);
-  } else {
-    removeEffectOfPicture();
-  }
-
-};
 
 const zoomIn = (value) => {
   if (value < SCALE_MAX_VALUE) {
@@ -128,6 +109,7 @@ const closeEditPictureForm = () => {
   smallScaleControl.removeEventListener('click', changePictureScale);
   bigScaleControl.removeEventListener('click', changePictureScale);
   effectPictureControl.removeEventListener('click', addEffectOfPicture);
+  removeEffectOfPicture();
   slider.noUiSlider.destroy();
 };
 

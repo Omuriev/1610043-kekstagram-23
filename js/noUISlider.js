@@ -3,7 +3,7 @@ const effectValueInput = document.querySelector('.effect-level__value');
 const picturePreview = document.querySelector('.img-upload__preview img');
 
 const SLIDER_OPTIONS = {
-  'effect-chrome': {
+  'chrome': {
     range: {
       min: 0,
       max: 1,
@@ -11,7 +11,7 @@ const SLIDER_OPTIONS = {
     step: 0.1,
     start: 1,
   },
-  'effect-sepia': {
+  'sepia': {
     range: {
       min: 0,
       max: 1,
@@ -19,7 +19,7 @@ const SLIDER_OPTIONS = {
     step: 0.1,
     start: 1,
   },
-  'effect-marvin': {
+  'marvin': {
     range: {
       min: 0,
       max: 100,
@@ -27,7 +27,7 @@ const SLIDER_OPTIONS = {
     step: 1,
     start: 100,
   },
-  'effect-phobos': {
+  'phobos': {
     range: {
       min: 0,
       max: 3,
@@ -35,7 +35,7 @@ const SLIDER_OPTIONS = {
     step: 0.1,
     start: 3,
   },
-  'effect-heat': {
+  'heat': {
     range: {
       min: 1,
       max: 3,
@@ -70,41 +70,52 @@ const createSlider = () => {
   slider.classList.add('hidden');
 };
 
+const removeEffectOfPicture = () => {
+  picturePreview.removeAttribute('class');
+  picturePreview.style.removeProperty('filter');
+  effectValueInput.value = '';
+  slider.classList.add('hidden');
+};
+
 const addPictureFilterStyle = (effect, value) => {
   switch (effect) {
-    case 'effect-chrome':
+    case 'chrome':
       picturePreview.style.filter = `grayscale(${value})`;
       break;
-    case 'effect-sepia':
+    case 'sepia':
       picturePreview.style.filter = `sepia(${value})`;
       break;
-    case 'effect-marvin':
+    case 'marvin':
       picturePreview.style.filter = `invert(${value}%)`;
       break;
-    case 'effect-phobos':
+    case 'phobos':
       picturePreview.style.filter = `blur(${value}px)`;
       break;
-    case 'effect-heat':
+    case 'heat':
       picturePreview.style.filter = `brightness(${value})`;
       break;
   }
 };
 
-const changePictureFilter = (effect) => {
-  slider.noUiSlider.on('update', (values, handle) => {
-    effectValueInput.value = `${values[handle]}`;
-    addPictureFilterStyle(effect, values[handle]);
-  });
-};
-
 const changeSliderOptions = (effectName) => {
   if (effectName in SLIDER_OPTIONS) {
     slider.classList.remove('hidden');
-    slider.noUiSlider.updateOptions(SLIDER_OPTIONS[effectName]);
-    changePictureFilter(effectName);
-  } else {
     slider.noUiSlider.off('update');
+    slider.noUiSlider.updateOptions(SLIDER_OPTIONS[effectName]);
+    slider.noUiSlider.on('update', (values, handle) => {
+      effectValueInput.value = `${values[handle]}`;
+      addPictureFilterStyle(effectName, values[handle]);
+    });
+  } else {
+    removeEffectOfPicture();
   }
 };
 
-export { changeSliderOptions, changePictureFilter, createSlider, slider };
+const addEffectOfPicture = ({ target: { value, type } }) => {
+  if(type === 'radio') {
+    picturePreview.className = `effects__preview--${value}`;
+    changeSliderOptions(value);
+  }
+};
+
+export { createSlider, addEffectOfPicture, removeEffectOfPicture, slider };
