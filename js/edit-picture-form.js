@@ -1,5 +1,5 @@
 import { checkStringLength } from './util.js';
-import { changeSliderOptions, changePictureFilter } from './noUISlider.js';
+import { changeSliderOptions, createSlider, slider } from './noUISlider.js';
 
 const MAX_COMMENT_LENGTH = 140;
 const SCALE_MIN_VALUE = 25;
@@ -25,44 +25,47 @@ const ErrorMessages = {
 };
 Object.freeze(ErrorMessages);
 
-const addEffectOfPicture = (evt) => {
-  const { id } = evt.target;
-  switch (id) {
-    case 'effect-chrome':
-      picturePreview.classList.add('effects__preview--chrome');
-      break;
-    case 'effect-sepia':
-      picturePreview.classList.add('effects__preview--sepia');
-      break;
-    case 'effect-marvin':
-      picturePreview.classList.add('effects__preview--marvin');
-      break;
-    case 'effect-phobos':
-      picturePreview.classList.add('effects__preview--phobos');
-      break;
-    case 'effect-heat':
-      picturePreview.classList.add('effects__preview--heat');
-      break;
-    default:
-      picturePreview.removeAttribute('class');
-      break;
-  }
-  changeSliderOptions(id);
-  changePictureFilter(id);
+const removeEffectOfPicture = () => {
+  picturePreview.removeAttribute('class');
+  picturePreview.style.removeProperty('filter');
+  slider.classList.add('hidden');
 };
 
-const changePictureScale = (evt) => {
-  const value = Number(scaleControlValue.value.split('%')[0]);
-  if (evt.target === smallScaleControl) {
-    if (value > SCALE_MIN_VALUE) {
-      scaleControlValue.value = `${value - SCALE_CHANGE_VALUE}%`;
-      picturePreview.style.transform = `scale(${scaleControlValue.value.split('%')[0]/100})`;
-    }
-  } else if (evt.target === bigScaleControl) {
-    if (value < SCALE_MAX_VALUE) {
-      scaleControlValue.value = `${value + SCALE_CHANGE_VALUE}%`;
-      picturePreview.style.transform = `scale(${scaleControlValue.value.split('%')[0]/100})`;
-    }
+const addEffectOfPicture = ({ target: { value, id } }) => {
+
+  if(value !== 'none' && id) {
+    picturePreview.className = '';
+    picturePreview.classList.add(`effects__preview--${value}`);
+    changeSliderOptions(id);
+    // changePictureFilter(`effect-phobos`);
+  } else {
+    removeEffectOfPicture();
+  }
+
+};
+
+const zoomIn = (value) => {
+  if (value < SCALE_MAX_VALUE) {
+    const scaleValue = value + SCALE_CHANGE_VALUE;
+    scaleControlValue.value = `${scaleValue}%`;
+    picturePreview.style.transform = `scale(${(scaleValue)/100})`;
+  }
+};
+
+const zoomOut = (value) => {
+  if (value > SCALE_MIN_VALUE) {
+    const scaleValue = value - SCALE_CHANGE_VALUE;
+    scaleControlValue.value = `${scaleValue}%`;
+    picturePreview.style.transform = `scale(${(scaleValue)/100})`;
+  }
+};
+
+const changePictureScale = ({ target }) => {
+  const value = parseInt(scaleControlValue.value, 10);
+  if (target === smallScaleControl) {
+    zoomOut(value);
+  } else if (target === bigScaleControl) {
+    zoomIn(value);
   }
 };
 
@@ -125,6 +128,7 @@ const closeEditPictureForm = () => {
   smallScaleControl.removeEventListener('click', changePictureScale);
   bigScaleControl.removeEventListener('click', changePictureScale);
   effectPictureControl.removeEventListener('click', addEffectOfPicture);
+  slider.noUiSlider.destroy();
 };
 
 const onEscButton = (evt) => {
@@ -147,6 +151,7 @@ const showEditPictureForm = () => {
   smallScaleControl.addEventListener('click', changePictureScale);
   bigScaleControl.addEventListener('click', changePictureScale);
   effectPictureControl.addEventListener('click', addEffectOfPicture);
+  createSlider();
 };
 
 uploadPictureInput.addEventListener('change', () => {
