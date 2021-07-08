@@ -1,5 +1,5 @@
-import {posts} from './posts.js';
-import {showBigPictureModal} from './render-big-picture.js';
+import { posts } from './posts.js';
+import { showBigPictureModal } from './render-big-picture.js';
 
 const picturesContainer = document.querySelector('.pictures');
 const pictureTemplate = document.querySelector('#picture')
@@ -10,7 +10,7 @@ const similarPosts = posts;
 
 const similarListFragment = document.createDocumentFragment();
 
-similarPosts.forEach(({url, likes, comments}) => {
+similarPosts.forEach(({ url, likes, comments }) => {
   const postElement = pictureTemplate.cloneNode(true);
   postElement.querySelector('.picture__img').setAttribute('src', url);
   postElement.querySelector('.picture__likes').textContent = likes;

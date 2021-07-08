@@ -1,12 +1,21 @@
 import { checkStringLength } from './util.js';
+import { createSlider, addEffectOfPicture, removeEffectOfPicture, slider } from './noUISlider.js';
 
 const MAX_COMMENT_LENGTH = 140;
+const SCALE_MIN_VALUE = 25;
+const SCALE_MAX_VALUE = 100;
+const SCALE_CHANGE_VALUE = 25;
 
 const uploadPictureInput = document.querySelector('#upload-file');
 const editPictureForm = document.querySelector('.img-upload__overlay');
 const editPictureCancelButton = editPictureForm.querySelector('#upload-cancel');
 const hashtagsInput = editPictureForm.querySelector('.text__hashtags');
 const commentInput = editPictureForm.querySelector('.text__description');
+const smallScaleControl = editPictureForm.querySelector('.scale__control--smaller');
+const bigScaleControl = editPictureForm.querySelector('.scale__control--bigger');
+const scaleControlValue = editPictureForm.querySelector('.scale__control--value');
+const picturePreview = editPictureForm.querySelector('.img-upload__preview img');
+const effectPictureControl = document.querySelector('.effects__list');
 
 const ErrorMessages = {
   HASHTAG_SUM: 'Нельзя указать больше 5 хэш-тегов',
@@ -15,6 +24,31 @@ const ErrorMessages = {
   COMMENT_LENGTH: 'Длинна комментария не должна быть больше 140 символов',
 };
 Object.freeze(ErrorMessages);
+
+const zoomIn = (value) => {
+  if (value < SCALE_MAX_VALUE) {
+    const scaleValue = value + SCALE_CHANGE_VALUE;
+    scaleControlValue.value = `${scaleValue}%`;
+    picturePreview.style.transform = `scale(${(scaleValue)/100})`;
+  }
+};
+
+const zoomOut = (value) => {
+  if (value > SCALE_MIN_VALUE) {
+    const scaleValue = value - SCALE_CHANGE_VALUE;
+    scaleControlValue.value = `${scaleValue}%`;
+    picturePreview.style.transform = `scale(${(scaleValue)/100})`;
+  }
+};
+
+const changePictureScale = ({ target }) => {
+  const value = parseInt(scaleControlValue.value, 10);
+  if (target === smallScaleControl) {
+    zoomOut(value);
+  } else if (target === bigScaleControl) {
+    zoomIn(value);
+  }
+};
 
 const checkUniqueHashtags = (hashtags) => {
   const uniqueValue = [];
@@ -72,7 +106,11 @@ const closeEditPictureForm = () => {
   hashtagsInput.removeEventListener('keydown', onInputFocused);
   commentInput.removeEventListener('input',checkComment);
   commentInput.removeEventListener('keydown', onInputFocused);
-
+  smallScaleControl.removeEventListener('click', changePictureScale);
+  bigScaleControl.removeEventListener('click', changePictureScale);
+  effectPictureControl.removeEventListener('click', addEffectOfPicture);
+  removeEffectOfPicture();
+  slider.noUiSlider.destroy();
 };
 
 const onEscButton = (evt) => {
@@ -85,12 +123,17 @@ const onEscButton = (evt) => {
 const showEditPictureForm = () => {
   editPictureForm.classList.remove('hidden');
   document.body.classList.add('modal-open');
+  scaleControlValue.value = '100%';
   editPictureCancelButton.addEventListener('click', closeEditPictureForm);
   hashtagsInput.addEventListener('input', getHashtags);
   hashtagsInput.addEventListener('keydown', onInputFocused);
   commentInput.addEventListener('input', checkComment);
   commentInput.addEventListener('keydown', onInputFocused);
   document.addEventListener('keydown', onEscButton);
+  smallScaleControl.addEventListener('click', changePictureScale);
+  bigScaleControl.addEventListener('click', changePictureScale);
+  effectPictureControl.addEventListener('click', addEffectOfPicture);
+  createSlider();
 };
 
 uploadPictureInput.addEventListener('change', () => {
