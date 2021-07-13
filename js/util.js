@@ -34,10 +34,23 @@ const closeSuccessModal = () => {
   successModal.remove();
 };
 
-
 const closeErrorModal = () => {
   const errorModal = document.querySelector('.error');
   errorModal.remove();
+};
+
+const onEscButtonForErrorModal = (evt) => {
+  if (evt.keyCode === 27) {
+    document.removeEventListener('keydown', onEscButtonForErrorModal);
+    closeErrorModal();
+  }
+};
+
+const onEscButtonForSuccessModal = (evt) => {
+  if (evt.keyCode === 27) {
+    document.removeEventListener('keydown', onEscButtonForSuccessModal);
+    closeSuccessModal();
+  }
 };
 
 const showErrorModal = () => {
@@ -45,11 +58,7 @@ const showErrorModal = () => {
   const closeButton = errorModalElement.querySelector('.error__button');
   document.body.appendChild(errorModalElement);
   closeButton.addEventListener('click', closeErrorModal);
-  document.addEventListener('keydown', (evt) => {
-    if (evt.keyCode === 27) {
-      closeErrorModal();
-    }
-  });
+  document.addEventListener('keydown', onEscButtonForErrorModal);
 };
 
 const showSuccess = () => {
@@ -57,11 +66,7 @@ const showSuccess = () => {
   const closeButton = successElement.querySelector('.success__button');
   document.body.appendChild(successElement);
   closeButton.addEventListener('click', closeSuccessModal);
-  document.addEventListener('keydown', (evt) => {
-    if (evt.keyCode === 27) {
-      closeSuccessModal();
-    }
-  });
+  document.addEventListener('keydown', onEscButtonForSuccessModal);
 };
 
 export { getRandomNumber, checkStringLength, showAlert, showSuccess, showErrorModal };

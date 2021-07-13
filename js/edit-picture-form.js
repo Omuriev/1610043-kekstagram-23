@@ -123,8 +123,17 @@ const closeEditPictureForm = () => {
   slider.noUiSlider.destroy();
 };
 
+
+const onEscButton = (evt) => {
+  if (evt.keyCode === 27) {
+    closeEditPictureForm();
+    document.removeEventListener('keydown', onEscButton);
+  }
+};
+
 const setFormSubmit = (evt) => {
   evt.preventDefault();
+  document.removeEventListener('keydown', onEscButton);
   sendData(
     () => {
       closeEditPictureForm();
@@ -136,13 +145,6 @@ const setFormSubmit = (evt) => {
     },
     new FormData(evt.target),
   );
-};
-
-const onEscButton = (evt) => {
-  if (evt.keyCode === 27) {
-    closeEditPictureForm();
-    document.removeEventListener('keydown', onEscButton);
-  }
 };
 
 const showEditPictureForm = () => {

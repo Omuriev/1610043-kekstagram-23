@@ -9,13 +9,11 @@ const getData = (onSuccess) => {
       if(response.ok) {
         return response.json();
       } else {
-        showAlert('Не удалось загрузить данные с сервера.');
+        return showAlert('Не удалось загрузить данные с сервера.');
       }
     })
-    .then((posts) => onSuccess(posts))
-    .catch(() => {
-      showAlert('Не удалось загрузить данные с сервера.');
-    });
+    .then(onSuccess)
+    .catch(() => showAlert('Не удалось загрузить данные с сервера.'));
 };
 
 const sendData = (onSuccess, onFail, body) => {
@@ -28,14 +26,12 @@ const sendData = (onSuccess, onFail, body) => {
   )
     .then((response) => {
       if(response.ok) {
-        onSuccess();
+        return onSuccess();
       } else {
-        onFail();
+        return onFail();
       }
     })
-    .catch(() => {
-      onFail();
-    });
+    .catch(() => onFail());
 };
 
 export { getData, sendData };
