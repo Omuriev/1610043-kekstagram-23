@@ -97,7 +97,7 @@ const addPictureFilterStyle = (effect, value) => {
   }
 };
 
-const changeSliderOptions = (effectName) => {
+const addEffect = (effectName) => {
   if (effectName in SLIDER_OPTIONS) {
     slider.classList.remove('hidden');
     slider.noUiSlider.off('update');
@@ -111,11 +111,11 @@ const changeSliderOptions = (effectName) => {
   }
 };
 
-const addEffectOfPicture = ({ target: { value, type } }) => {
+const onEffectClick = ({ target: { value, type } }) => {
   if(type === 'radio') {
     picturePreview.className = `effects__preview--${value}`;
-    changeSliderOptions(value);
+    addEffect(value);
   }
 };
 
-export { createSlider, addEffectOfPicture, removeEffectOfPicture, slider };
+export { createSlider, onEffectClick, removeEffectOfPicture, slider };
