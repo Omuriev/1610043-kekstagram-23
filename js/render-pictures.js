@@ -8,7 +8,10 @@ const similarListFragment = document.createDocumentFragment();
 let similarPosts = [];
 
 const renderPostsList = (posts) => {
-  similarPosts = posts;
+  if (!similarPosts.length) {
+    similarPosts = posts;
+  }
+
   posts.forEach(({ url, likes, comments }) => {
     const postElement = pictureTemplate.cloneNode(true);
     postElement.querySelector('.picture__img').setAttribute('src', url);
@@ -29,4 +32,4 @@ picturesContainer.addEventListener('click', (evt) => {
   }
 });
 
-export { renderPostsList };
+export { renderPostsList, similarPosts };

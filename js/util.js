@@ -39,15 +39,15 @@ const closeErrorModal = () => {
   errorModal.remove();
 };
 
-const onEscButtonForErrorModal = (evt) => {
-  if (evt.keyCode === 27) {
+const onEscButtonForErrorModal = ({keyCode}) => {
+  if (keyCode === 27) {
     document.removeEventListener('keydown', onEscButtonForErrorModal);
     closeErrorModal();
   }
 };
 
-const onEscButtonForSuccessModal = (evt) => {
-  if (evt.keyCode === 27) {
+const onEscButtonForSuccessModal = ({keyCode}) => {
+  if (keyCode === 27) {
     document.removeEventListener('keydown', onEscButtonForSuccessModal);
     closeSuccessModal();
   }
