@@ -1,5 +1,4 @@
 import { renderPostsList, similarPosts } from './render-pictures.js';
-import { getRandomNumber } from './util.js';
 import { debounce } from './utils/debounce.js';
 
 const DELAY = 500;
@@ -24,6 +23,13 @@ const setActive = (activeButton) => {
   activeButton.classList.add('img-filters__button--active');
 };
 
+const shufflePosts = (array) => {
+  for (let index = array.length - 1; index > 0; index--) {
+    const randomNum = Math.floor(Math.random() * (index + 1));
+    [array[index], array[randomNum]] = [array[randomNum], array[index]];
+  }
+};
+
 const setDebounce = (debounce((posts) => {
   clearPicturesCointainer();
   renderPostsList(posts);
@@ -34,22 +40,19 @@ const showFilter = () => {
 
   filterDefaultButton.addEventListener('click', () => {
     setActive(filterDefaultButton);
-    setDebounce(similarPosts);
+    const defaultPictures = similarPosts.sort((first, second) => first.id > second.id ? 1 : -1);
+    setDebounce(defaultPictures);
   });
+
+
   filterRandomButton.addEventListener('click', () => {
-    const renderedPictures = [];
-    while (renderedPictures.length < 10) {
-      const getPost = similarPosts[getRandomNumber(0, similarPosts.length - 1)];
-      if(!renderedPictures.includes(getPost)) {
-        renderedPictures.push(getPost);
-      }
-    }
+    shufflePosts(similarPosts);
     setActive(filterRandomButton);
-    setDebounce(renderedPictures);
+    setDebounce(similarPosts.slice(0, 10));
   });
   filterDiscussedButton.addEventListener('click', () => {
-    const discussedPictures = similarPosts.slice().sort((first, second) => first.comments.length > second.comments.length ? 1 : -1);
-    discussedPictures.reverse();
+    const discussedPictures = [...similarPosts];
+    discussedPictures.sort((first, second) => first.comments.length > second.comments.length ? -1 : 1);
     setActive(filterDiscussedButton);
     setDebounce(discussedPictures);
   });
