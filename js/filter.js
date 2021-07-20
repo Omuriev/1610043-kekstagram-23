@@ -4,7 +4,6 @@ import { debounce } from './utils/debounce.js';
 const DELAY = 500;
 
 const filterForm = document.querySelector('.img-filters');
-const filterButtons = document.querySelectorAll('.img-filters__button');
 const filterDefaultButton = document.querySelector('#filter-default');
 const filterRandomButton = document.querySelector('#filter-random');
 const filterDiscussedButton = document.querySelector('#filter-discussed');
@@ -17,9 +16,8 @@ const clearPicturesCointainer = () => {
 };
 
 const setActive = (activeButton) => {
-  filterButtons.forEach((filterButton) => {
-    filterButton.classList.remove('img-filters__button--active');
-  });
+  const currentActiveButton = document.querySelector('.img-filters__button--active');
+  currentActiveButton.classList.remove('img-filters__button--active');
   activeButton.classList.add('img-filters__button--active');
 };
 
@@ -40,15 +38,13 @@ const showFilter = () => {
 
   filterDefaultButton.addEventListener('click', () => {
     setActive(filterDefaultButton);
-    const defaultPictures = similarPosts.sort((first, second) => first.id > second.id ? 1 : -1);
-    setDebounce(defaultPictures);
+    setDebounce(similarPosts);
   });
-
-
   filterRandomButton.addEventListener('click', () => {
-    shufflePosts(similarPosts);
+    const randomPosts = [...similarPosts];
+    shufflePosts(randomPosts);
     setActive(filterRandomButton);
-    setDebounce(similarPosts.slice(0, 10));
+    setDebounce(randomPosts.slice(0, 10));
   });
   filterDiscussedButton.addEventListener('click', () => {
     const discussedPictures = [...similarPosts];
