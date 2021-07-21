@@ -1,22 +1,18 @@
-import { showAlert } from './util.js';
+import { showFilter } from './filter.js';
+import { showAlert } from './modals.js';
 
 const GET_DATA_URL = 'https://23.javascript.pages.academy/kekstagram/data';
 const SEND_DATA_URL = 'https://23.javascript.pages.academy/kekstagram';
 
-
-const getData = (onSuccess, showFilter) => {
+const getData = (onSuccess) => {
   fetch(GET_DATA_URL)
     .then((response) => {
-      if(response.ok) {
+      if (response.ok) {
         return response.json();
       }
       return showAlert('Не удалось загрузить данные с сервера.');
     })
-    .then((posts) => {
-      showFilter();
-      return onSuccess(posts);
-
-    })
+    .then((posts) => onSuccess(posts, showFilter))
     .catch(() => showAlert('Не удалось загрузить данные с сервера.'));
 };
 
@@ -29,7 +25,7 @@ const sendData = (onSuccess, onFail, body) => {
     },
   )
     .then((response) => {
-      if(response.ok) {
+      if (response.ok) {
         return onSuccess();
       }
       return onFail();

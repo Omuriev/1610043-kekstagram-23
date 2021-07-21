@@ -9,7 +9,7 @@ const filterRandomButton = document.querySelector('#filter-random');
 const filterDiscussedButton = document.querySelector('#filter-discussed');
 const picturesContainer = document.querySelector('.pictures');
 
-const clearPicturesCointainer = () => {
+const clearPicturesContainer = () => {
   picturesContainer.querySelectorAll('.picture').forEach((picture) => {
     picture.remove();
   });
@@ -29,7 +29,7 @@ const shufflePosts = (array) => {
 };
 
 const setDebounce = (debounce((posts) => {
-  clearPicturesCointainer();
+  clearPicturesContainer();
   renderPostsList(posts);
 }, DELAY));
 

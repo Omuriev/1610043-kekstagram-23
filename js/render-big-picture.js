@@ -27,7 +27,7 @@ const generateComments = (comments) => comments.reduce((acc, item) => {
   return [...acc, listItem];
 }, []);
 
-const showComments = () => {
+const onShowComments = () => {
   commentsContainer.append(...generatedComments.slice(commentsCount - 5, commentsCount));
   commentsCounter.textContent = `${commentsContainer.children.length} из ${generatedComments.length} комментариев`;
   if (generatedComments.length <= commentsCount) {
@@ -38,21 +38,22 @@ const showComments = () => {
   }
 };
 
-const closeBigPictureModal = () => {
+const onCloseBigPictureModal = () => {
   bigPictureModal.classList.add('hidden');
   document.body.classList.remove('modal-open');
-  bigPictureCancelButton.removeEventListener('click', closeBigPictureModal);
-  commentsLoader.removeEventListener('click', showComments);
+  bigPictureCancelButton.removeEventListener('click', onCloseBigPictureModal);
+  commentsLoader.removeEventListener('click', onShowComments);
+  commentsCount = 5;
 };
 
 const onEscButton = (evt) => {
   if (evt.keyCode === 27) {
-    closeBigPictureModal();
     document.removeEventListener('keydown', onEscButton);
+    onCloseBigPictureModal();
   }
 };
 
-const showBigPictureModal = ({url, likes, comments, description}) => {
+const showBigPictureModal = ({ url, likes, comments, description }) => {
   bigPictureModal.classList.remove('hidden');
   bigPictureImage.setAttribute('src', url);
   bigPictureLikes.textContent = likes;
@@ -61,9 +62,9 @@ const showBigPictureModal = ({url, likes, comments, description}) => {
   commentsLoader.classList.remove('hidden');
   document.body.classList.add('modal-open');
   commentsContainer.innerHTML = '';
-  showComments();
-  commentsLoader.addEventListener('click', showComments);
-  bigPictureCancelButton.addEventListener('click', closeBigPictureModal);
+  onShowComments();
+  commentsLoader.addEventListener('click', onShowComments);
+  bigPictureCancelButton.addEventListener('click', onCloseBigPictureModal);
   document.addEventListener('keydown', onEscButton);
 };
 

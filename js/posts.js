@@ -1,6 +1,6 @@
 import { getRandomNumber } from './util.js';
 
-const DESCRIOPTIONS_OF_PHOTOS = [
+const DESCRIPTIONS_OF_PHOTOS = [
   'На море',
   'В семейном кругу',
   'Едем в метро',
@@ -31,7 +31,6 @@ const posts = [];
 
 const getRandomArrayElement = (elements) => elements[getRandomNumber(0, elements.length - 1)];
 
-
 const createMessage = () => {
   const numberOfSentences = getRandomNumber(1,2);
   return Array(numberOfSentences)
@@ -55,7 +54,7 @@ const createPost = (id) => {
   return {
     id: id,
     url: `photos/${id}.jpg`,
-    description: getRandomArrayElement(DESCRIOPTIONS_OF_PHOTOS),
+    description: getRandomArrayElement(DESCRIPTIONS_OF_PHOTOS),
     likes: getRandomNumber(15, 200),
     comments: Array(numberOfComments)
       .fill()
@@ -66,5 +65,3 @@ const createPost = (id) => {
 for (let item = 1; item <= 25; item++) {
   posts.push(createPost(item));
 }
-
-export { posts };
