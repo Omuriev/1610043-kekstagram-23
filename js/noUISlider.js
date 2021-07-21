@@ -112,7 +112,7 @@ const addEffect = (effectName) => {
 };
 
 const onEffectClick = ({ target: { value, type } }) => {
-  if(type === 'radio') {
+  if (type === 'radio') {
     picturePreview.className = `effects__preview--${value}`;
     addEffect(value);
   }

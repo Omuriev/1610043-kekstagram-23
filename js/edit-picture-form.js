@@ -1,4 +1,5 @@
-import { checkStringLength, showSuccess, showErrorModal } from './util.js';
+import { checkStringLength } from './util.js';
+import { showSuccess, showErrorModal } from './modals.js';
 import { sendData } from './api.js';
 import { createSlider, onEffectClick, removeEffectOfPicture, slider } from './noUISlider.js';
 
@@ -43,7 +44,7 @@ const zoomOut = (value) => {
   }
 };
 
-const changePictureScale = ({ target }) => {
+const onChangePictureScale = ({ target }) => {
   const value = parseInt(scaleControlValue.value, 10);
   if (target === smallScaleControl) {
     zoomOut(value);
@@ -54,14 +55,15 @@ const changePictureScale = ({ target }) => {
 
 const checkUniqueHashtags = (hashtags) => {
   const uniqueValue = [];
-  for (let index = 0; index < hashtags.length; ++index) {
-    const value = hashtags[index].toLowerCase();
+  let isUnique = true;
+  hashtags.forEach((element) => {
+    const value = element.toLowerCase();
     if (uniqueValue.indexOf(value) !== -1) {
-      return false;
+      isUnique = false;
     }
     uniqueValue.push(value);
-  }
-  return true;
+  });
+  return isUnique;
 };
 
 const isFit = (hashtags, template) => hashtags.every((element) => template.test(element));
@@ -80,18 +82,15 @@ const renderValidationMessages = (hashtags) => {
   hashtagsInput.reportValidity();
 };
 
-const getHashtags = (evt) => {
+const onGetHashtags = (evt) => {
   const hashtags = evt.target.value.split(' ');
   renderValidationMessages(hashtags);
 };
 
-const onInputFocused = (evt) => {
-  evt.stopPropagation();
-};
+const onInputFocused = (evt) => evt.stopPropagation();
 
-const checkComment = (evt) => {
-  const { value } = evt.target;
-  if(!checkStringLength(value, MAX_COMMENT_LENGTH)) {
+const onCheckComment = ({ target: { value } }) => {
+  if (!checkStringLength(value, MAX_COMMENT_LENGTH)) {
     commentInput.setCustomValidity(ErrorMessages.COMMENT_LENGTH);
   } else {
     commentInput.setCustomValidity('');
@@ -107,40 +106,39 @@ const resetFormValues = () => {
   commentInput.value = '';
 };
 
-const closeEditPictureForm = () => {
+const onCloseEditPictureForm = () => {
   resetFormValues();
   removeEffectOfPicture();
   editPictureModal.classList.add('hidden');
   document.body.classList.remove('modal-open');
-  editPictureCancelButton.removeEventListener('click', closeEditPictureForm);
-  hashtagsInput.removeEventListener('input', getHashtags);
+  editPictureCancelButton.removeEventListener('click', onCloseEditPictureForm);
+  hashtagsInput.removeEventListener('input', onGetHashtags);
   hashtagsInput.removeEventListener('keydown', onInputFocused);
-  commentInput.removeEventListener('input',checkComment);
+  commentInput.removeEventListener('input', onCheckComment);
   commentInput.removeEventListener('keydown', onInputFocused);
-  smallScaleControl.removeEventListener('click', changePictureScale);
-  bigScaleControl.removeEventListener('click', changePictureScale);
+  smallScaleControl.removeEventListener('click', onChangePictureScale);
+  bigScaleControl.removeEventListener('click', onChangePictureScale);
   effectPictureControl.removeEventListener('click', onEffectClick);
   slider.noUiSlider.destroy();
 };
 
-
 const onEscButton = (evt) => {
   if (evt.keyCode === 27) {
-    closeEditPictureForm();
+    onCloseEditPictureForm();
     document.removeEventListener('keydown', onEscButton);
   }
 };
 
-const setFormSubmit = (evt) => {
+const onSetFormSubmit = (evt) => {
   evt.preventDefault();
   document.removeEventListener('keydown', onEscButton);
   sendData(
     () => {
-      closeEditPictureForm();
+      onCloseEditPictureForm();
       showSuccess();
     },
     () => {
-      closeEditPictureForm();
+      onCloseEditPictureForm();
       showErrorModal();
     },
     new FormData(evt.target),
@@ -151,17 +149,17 @@ const showEditPictureForm = () => {
   editPictureModal.classList.remove('hidden');
   document.body.classList.add('modal-open');
   scaleControlValue.value = '100%';
-  editPictureCancelButton.addEventListener('click', closeEditPictureForm);
-  hashtagsInput.addEventListener('input', getHashtags);
+  editPictureCancelButton.addEventListener('click', onCloseEditPictureForm);
+  hashtagsInput.addEventListener('input', onGetHashtags);
   hashtagsInput.addEventListener('keydown', onInputFocused);
-  commentInput.addEventListener('input', checkComment);
+  commentInput.addEventListener('input', onCheckComment);
   commentInput.addEventListener('keydown', onInputFocused);
   document.addEventListener('keydown', onEscButton);
-  smallScaleControl.addEventListener('click', changePictureScale);
-  bigScaleControl.addEventListener('click', changePictureScale);
+  smallScaleControl.addEventListener('click', onChangePictureScale);
+  bigScaleControl.addEventListener('click', onChangePictureScale);
   effectPictureControl.addEventListener('click', onEffectClick);
   createSlider();
-  editPictureForm.addEventListener('submit', setFormSubmit);
+  editPictureForm.addEventListener('submit', onSetFormSubmit);
 };
 
 uploadPictureInput.addEventListener('change', () => {
@@ -169,5 +167,3 @@ uploadPictureInput.addEventListener('change', () => {
     showEditPictureForm(uploadPictureInput.value);
   }
 });
-
-export { setFormSubmit, closeEditPictureForm };
