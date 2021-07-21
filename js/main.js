@@ -3,8 +3,9 @@ import { getData } from './api.js';
 import './render-big-picture.js';
 import './edit-picture-form.js';
 import './noUISlider.js';
+import { showFilter } from './filter.js';
 
-getData((posts, renderFilter) => {
-  renderFilter();
+getData((posts) => {
+  showFilter();
   renderPostsList(posts);
 });

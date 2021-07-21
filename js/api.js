@@ -1,4 +1,3 @@
-import { showFilter } from './filter.js';
 import { showAlert } from './modals.js';
 
 const GET_DATA_URL = 'https://23.javascript.pages.academy/kekstagram/data';
@@ -12,7 +11,7 @@ const getData = (onSuccess) => {
       }
       return showAlert('Не удалось загрузить данные с сервера.');
     })
-    .then((posts) => onSuccess(posts, showFilter))
+    .then((posts) => onSuccess(posts))
     .catch(() => showAlert('Не удалось загрузить данные с сервера.'));
 };
 
