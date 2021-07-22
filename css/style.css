@@ -696,6 +696,10 @@ main {
   border-radius: 5px;
 }
 
+.text__hashtags:invalid {
+  border: 5px solid red;
+}
+
 .text__description {
   width: 450px;
   height: 100px;
@@ -710,6 +714,9 @@ main {
   border-radius: 5px;
 }
 
+.text__description:invalid {
+  border: 5px solid red;
+}
 
 /**
  * Кнопка для отправки изображения

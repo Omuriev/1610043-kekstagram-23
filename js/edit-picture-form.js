@@ -54,27 +54,38 @@ const onChangePictureScale = ({ target }) => {
 };
 
 const checkUniqueHashtags = (hashtags) => {
-  const uniqueValue = [];
+  const uniqueValues = [];
   let isUnique = true;
   hashtags.forEach((element) => {
     const value = element.toLowerCase();
-    if (uniqueValue.indexOf(value) !== -1) {
+    if (uniqueValues.indexOf(value) !== -1) {
       isUnique = false;
     }
-    uniqueValue.push(value);
+    uniqueValues.push(value);
   });
   return isUnique;
+};
+
+const removeEmptyValues = (hashtags) => {
+  const nonEmptyHashtags = [];
+  hashtags.forEach((element) => {
+    if (element !== '') {
+      nonEmptyHashtags.push(element);
+    }
+  });
+  return nonEmptyHashtags;
 };
 
 const isFit = (hashtags, template) => hashtags.every((element) => template.test(element));
 
 const renderValidationMessages = (hashtags) => {
   const re = /^#[A-Za-zА-Яа-я0-9]{1,19}$/;
-  if (!isFit(hashtags, re)) {
+  const nonEmptyHashtags = removeEmptyValues(hashtags);
+  if (!isFit(nonEmptyHashtags, re)) {
     hashtagsInput.setCustomValidity(ErrorMessages.HASHTAG_TEMPLATE);
-  } else if (!checkUniqueHashtags(hashtags)) {
+  } else if (!checkUniqueHashtags(nonEmptyHashtags)) {
     hashtagsInput.setCustomValidity(ErrorMessages.HASHTAG_REPEAT);
-  } else if (hashtags.length > 5) {
+  } else if (nonEmptyHashtags.length > 5) {
     hashtagsInput.setCustomValidity(ErrorMessages.HASHTAG_SUM);
   } else {
     hashtagsInput.setCustomValidity('');
@@ -112,7 +123,7 @@ const onCloseEditPictureForm = () => {
   editPictureModal.classList.add('hidden');
   document.body.classList.remove('modal-open');
   editPictureCancelButton.removeEventListener('click', onCloseEditPictureForm);
-  hashtagsInput.removeEventListener('input', onGetHashtags);
+  hashtagsInput.removeEventListener('blur', onGetHashtags);
   hashtagsInput.removeEventListener('keydown', onInputFocused);
   commentInput.removeEventListener('input', onCheckComment);
   commentInput.removeEventListener('keydown', onInputFocused);
@@ -150,7 +161,7 @@ const showEditPictureForm = () => {
   document.body.classList.add('modal-open');
   scaleControlValue.value = '100%';
   editPictureCancelButton.addEventListener('click', onCloseEditPictureForm);
-  hashtagsInput.addEventListener('input', onGetHashtags);
+  hashtagsInput.addEventListener('blur', onGetHashtags);
   hashtagsInput.addEventListener('keydown', onInputFocused);
   commentInput.addEventListener('input', onCheckComment);
   commentInput.addEventListener('keydown', onInputFocused);
