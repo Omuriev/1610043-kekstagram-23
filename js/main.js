@@ -6,6 +6,6 @@ import './noUISlider.js';
 import { showFilter } from './filter.js';
 
 getData((posts) => {
-  showFilter();
   renderPostsList(posts);
+  showFilter();
 });

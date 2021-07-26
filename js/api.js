@@ -3,17 +3,16 @@ import { showAlert } from './modals.js';
 const GET_DATA_URL = 'https://23.javascript.pages.academy/kekstagram/data';
 const SEND_DATA_URL = 'https://23.javascript.pages.academy/kekstagram';
 
-const getData = (onSuccess) => {
+const getData = (onSuccess) =>
   fetch(GET_DATA_URL)
     .then((response) => {
       if (response.ok) {
         return response.json();
       }
-      return showAlert('Не удалось загрузить данные с сервера.');
+      return Promise.reject('Ошибка');
     })
     .then((posts) => onSuccess(posts))
-    .catch(() => showAlert('Не удалось загрузить данные с сервера.'));
-};
+    .catch((err) => showAlert(`Не удалось загрузить данные с сервера. ${err}`));
 
 const sendData = (onSuccess, onFail, body) => {
   fetch(

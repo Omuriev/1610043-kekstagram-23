@@ -23,7 +23,7 @@ const editPictureForm = document.querySelector('.img-upload__form');
 const ErrorMessages = {
   HASHTAG_SUM: 'Нельзя указать больше 5 хэш-тегов',
   HASHTAG_REPEAT: 'Хэштеги не должны повторяться',
-  HASHTAG_TEMPLATE: 'Хэштеги не соответствуют требованиям. Хэштег должен начинаться с знака #, не может содержать пробелы, спецсимволы, символы пунктуации, эмодзи',
+  HASHTAG_TEMPLATE: 'Хэштеги не соответствуют требованиям. Хэштег должен начинаться с знака #, не может состоять из одного символа #, не может содержать пробелы, спецсимволы, символы пунктуации, эмодзи',
   COMMENT_LENGTH: 'Длинна комментария не должна быть больше 140 символов',
 };
 Object.freeze(ErrorMessages);
@@ -32,6 +32,7 @@ const zoomIn = (value) => {
   if (value < SCALE_MAX_VALUE) {
     const scaleValue = value + SCALE_CHANGE_VALUE;
     scaleControlValue.value = `${scaleValue}%`;
+    scaleControlValue.setAttribute('value', `${scaleValue}%`);
     picturePreview.style.transform = `scale(${(scaleValue)/100})`;
   }
 };
@@ -40,6 +41,7 @@ const zoomOut = (value) => {
   if (value > SCALE_MIN_VALUE) {
     const scaleValue = value - SCALE_CHANGE_VALUE;
     scaleControlValue.value = `${scaleValue}%`;
+    scaleControlValue.setAttribute('value', `${scaleValue}%`);
     picturePreview.style.transform = `scale(${(scaleValue)/100})`;
   }
 };
@@ -123,7 +125,7 @@ const onCloseEditPictureForm = () => {
   editPictureModal.classList.add('hidden');
   document.body.classList.remove('modal-open');
   editPictureCancelButton.removeEventListener('click', onCloseEditPictureForm);
-  hashtagsInput.removeEventListener('blur', onGetHashtags);
+  hashtagsInput.removeEventListener('input', onGetHashtags);
   hashtagsInput.removeEventListener('keydown', onInputFocused);
   commentInput.removeEventListener('input', onCheckComment);
   commentInput.removeEventListener('keydown', onInputFocused);
@@ -160,8 +162,9 @@ const showEditPictureForm = () => {
   editPictureModal.classList.remove('hidden');
   document.body.classList.add('modal-open');
   scaleControlValue.value = '100%';
+  scaleControlValue.setAttribute('value', '100%');
   editPictureCancelButton.addEventListener('click', onCloseEditPictureForm);
-  hashtagsInput.addEventListener('blur', onGetHashtags);
+  hashtagsInput.addEventListener('input', onGetHashtags);
   hashtagsInput.addEventListener('keydown', onInputFocused);
   commentInput.addEventListener('input', onCheckComment);
   commentInput.addEventListener('keydown', onInputFocused);
